@@ -22,7 +22,6 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ov7670.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +32,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define BUFFER_SIZE 100
-extern uint8_t OV7670_vsync;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -217,25 +215,5 @@ void EXTI15_10_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void OV7725_VSYNC_EXTI_INT_FUNCTION(void)
-{
-  if (__HAL_GPIO_EXTI_GET_IT(OV7725_VSYNC_GPIO_PIN) != RESET)
-  {
-    if (OV7670_vsync == 0)
-    {
-      FIFO_WRST_L();
-      FIFO_WE_H();
 
-      OV7670_vsync = 1;
-      FIFO_WE_H();
-      FIFO_WRST_H();
-    }
-    else if (OV7670_vsync == 1)
-    {
-      FIFO_WE_L();
-      OV7670_vsync = 2;
-    }
-    __HAL_GPIO_EXTI_CLEAR_IT(OV7725_VSYNC_GPIO_PIN);
-  }
-}
 /* USER CODE END 1 */

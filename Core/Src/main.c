@@ -26,7 +26,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
-#include "ov7670.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,15 +55,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile uint8_t cnt = 1;
 volatile uint16_t red = 100;
 volatile uint16_t green = 50;
 volatile uint16_t blue = 0;
-volatile uint8_t a = 1;
-volatile uint8_t b = 1;
-volatile uint8_t c = 1;
-volatile uint8_t Sensor_IDCode = 0;
-extern uint8_t OV7670_vsync;
 /* USER CODE END 0 */
 
 /**
@@ -98,26 +91,12 @@ int main(void)
   MX_TIM3_Init();
   MX_FSMC_Init();
   MX_CAN_Init();
-  OV7670_INIT();
   /* USER CODE BEGIN 2 */
   // HAL_SD_CARD_READY();
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  HAL_GPIO_WritePin(C_RST_GPIO_Port, C_RST_Pin, GPIO_PIN_SET);
-
-  // LCD_DrawDot(50, 50, 0X0000);
-  // LCD_DrawEllipse(120, 160, 25, 75, BLACK);
-  // uint8_t Sensor_IDCode = 0;
-  // SCL_H;
-  // SDA_H;
-
-  a = SCCB_WriteByte(0x12, 0x80);
-  b = SCCB_ReadByte(&Sensor_IDCode, 1, 0x0b);
   LCD_INIT();
-  LCD_DrawString(0, 0, "HUANG, HAOLUN");
-  OV7725_Window_Set(0, 0, 320, 240);
-  OV7670_vsync = 0;
 
   /* USER CODE END 2 */
 
@@ -128,14 +107,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if (OV7670_vsync == 2)
-    {
-      FIFO_PREPARE; /*FIFO准备*/
-      Image_Display(0, 0, 320, 240);
-      OV7670_vsync = 0;
-    }
-    b = SDA_read;
-    a = SCL_read;
     red = (rand() % 10 + red) % 310;
     green = (rand() % 10 + green) % 310;
     blue = (rand() % 10 + blue) % 310;
@@ -143,7 +114,6 @@ int main(void)
     htim3.Instance->CCR2 = 100 + ((red > 155) ? 310 - red : red);
     htim3.Instance->CCR3 = 100 + ((green > 155) ? 310 - green : green);
     htim3.Instance->CCR4 = 100 + ((blue > 155) ? 310 - blue : blue);
-    cnt++;
     HAL_Delay(50);
   }
   /* USER CODE END 3 */
