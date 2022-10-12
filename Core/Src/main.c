@@ -18,14 +18,16 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "can.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
+#include "string.h"
+#include "motorDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +60,9 @@ void SystemClock_Config(void);
 volatile uint16_t red = 100;
 volatile uint16_t green = 50;
 volatile uint16_t blue = 0;
+volatile uint16_t fy = 50;
+uint8_t RxBuffer[9];
+
 /* USER CODE END 0 */
 
 /**
@@ -90,14 +95,20 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   MX_FSMC_Init();
-  MX_CAN_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   // HAL_SD_CARD_READY();
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  LCD_INIT();
 
+  // LCD_INIT();
+  // motorDriver test();
+  // rotateInPosMode(1, 1, 180);
+  // enable(1, 0);
+
+  rotateInSpdMode(1, 0, 10);
+  // setSpdState(1, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -1067,7 +1067,7 @@ HAL_StatusTypeDef HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevA
     if ((hi2c->Instance->CR1 & I2C_CR1_PE) != I2C_CR1_PE)
     {
       /* Enable I2C peripheral */
-      __HAL_I2lC_ENABLE(hi2c);
+      __HAL_I2C_ENABLE(hi2c);
     }
 
     /* Disable Pos */
