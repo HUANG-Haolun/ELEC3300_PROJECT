@@ -14,7 +14,7 @@
 #include <string.h>
 
 void getFeedBack(uint16_t id) {
-    HAL_UART_Transmit(&huart2, (uint8_t *)&RxBuffer, 9, 0xFFFF);
+    // HAL_UART_Transmit(&huart2, (uint8_t *)&RxBuffer, 9, 0xFFFF);
 }
 
 void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle)

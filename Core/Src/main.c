@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "string.h"
-#include "motorDriver.h"
+#include "cubeControl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,11 +103,19 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 
   // LCD_INIT();
+  // B;
+  // B1;
+  // B2;
+  R;
   // motorDriver test();
-  // rotateInPosMode(1, 1, 180);
-  // enable(1, 0);
+  // rotateInPosMode(2, 0, 117);
+  // HAL_Delay(1000);
+  // rotateInPosMode(2, 1, 27);
+  // HAL_Delay(1000);
+  // rotateInPosMode(1, 0, 90);
+  // enable(0, 0); 
 
-  rotateInSpdMode(1, 0, 10);
+  // rotateInSpdMode(1, 0, 10);
   // setSpdState(1, 1);
   /* USER CODE END 2 */
 

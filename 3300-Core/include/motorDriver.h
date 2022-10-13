@@ -21,6 +21,8 @@
 #define ENABLE_REG 0xf3
 #define SPD_FLAG 0xff
 
+
+
 void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle);
 
 void rotateInSpdMode(uint8_t ID, uint8_t dir, uint16_t speed);
@@ -35,8 +37,8 @@ void enable(uint8_t ID, uint8_t enable);
 
 /**
  * @brief Set the Spd State object
- * 
- * @param ID 
+ *
+ * @param ID
  * @param set non zero is set, zero is clear
  */
 void setSpdState(uint8_t ID, uint8_t set);
