@@ -60,8 +60,7 @@ void SystemClock_Config(void);
 volatile uint16_t red = 100;
 volatile uint16_t green = 50;
 volatile uint16_t blue = 0;
-volatile uint16_t fy = 50;
-uint8_t RxBuffer[9];
+volatile uint8_t fy;
 
 /* USER CODE END 0 */
 
@@ -98,26 +97,13 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   // HAL_SD_CARD_READY();
+
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  motor_flag = 7;
 
-  // LCD_INIT();
-  // B;
-  // B1;
-  // B2;
-  R;
-  // motorDriver test();
-  // rotateInPosMode(2, 0, 117);
-  // HAL_Delay(1000);
-  // rotateInPosMode(2, 1, 27);
-  // HAL_Delay(1000);
-  // rotateInPosMode(1, 0, 90);
-  // enable(0, 0); 
-
-  // rotateInSpdMode(1, 0, 10);
-  // setSpdState(1, 1);
-  /* USER CODE END 2 */
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)&RxBuffer, 3);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -126,14 +112,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    B1;
     red = (rand() % 10 + red) % 310;
     green = (rand() % 10 + green) % 310;
     blue = (rand() % 10 + blue) % 310;
-
     htim3.Instance->CCR2 = 100 + ((red > 155) ? 310 - red : red);
     htim3.Instance->CCR3 = 100 + ((green > 155) ? 310 - green : green);
     htim3.Instance->CCR4 = 100 + ((blue > 155) ? 310 - blue : blue);
-    HAL_Delay(50);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

@@ -21,9 +21,11 @@
 #define ENABLE_REG 0xf3
 #define SPD_FLAG 0xff
 
+#define RXBUFFERSIZE 3
+uint8_t RxBuffer[RXBUFFERSIZE];
+volatile uint8_t motor_flag;
 
-
-void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle);
+void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle, uint8_t wait_flag);
 
 void rotateInSpdMode(uint8_t ID, uint8_t dir, uint16_t speed);
 
