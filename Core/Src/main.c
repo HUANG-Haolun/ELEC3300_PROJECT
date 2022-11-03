@@ -61,7 +61,6 @@ volatile uint16_t red = 100;
 volatile uint16_t green = 50;
 volatile uint16_t blue = 0;
 volatile uint8_t fy;
-
 /* USER CODE END 0 */
 
 /**
@@ -104,7 +103,6 @@ int main(void)
   motor_flag = 7;
 
   HAL_UART_Receive_IT(&huart2, (uint8_t *)&RxBuffer, 3);
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -112,7 +110,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    B1;
     red = (rand() % 10 + red) % 310;
     green = (rand() % 10 + green) % 310;
     blue = (rand() % 10 + blue) % 310;

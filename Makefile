@@ -65,6 +65,7 @@ Core/Src/system_stm32f1xx.c \
 Core/Src/usart.c \
 3300-Core/src/motorDriver.c \
 3300-Core/src/lcd.c \
+3300-Core/src/solve.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
 
 # ASM sources
