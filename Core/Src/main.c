@@ -25,9 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cubeControl.h"
 #include "lcd.h"
 #include "string.h"
-#include "cubeControl.h"
 #include "bsp_ov7725.h"
 #include "bsp_sccb.h"
 /* USER CODE END Includes */
@@ -118,7 +118,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    L;
+    F;
 //    HAL_Delay(500);
 	if (Ov7725_vsync == 2)
 	{

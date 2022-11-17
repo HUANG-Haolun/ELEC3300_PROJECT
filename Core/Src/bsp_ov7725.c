@@ -11,8 +11,10 @@ typedef struct Reg
 } Reg_Info;
 
 uint16_t squareColors[9];
-uint16_t true_colors[6] = { 0x31be,0xdA03, 0x2d63, 0xdc63,0xfdee, 0x0000}; 
-uint16_t true1_colors[6] = {BLUE,RED, GREEN, ORANGE,WHITE, YELLOW}; 
+uint16_t temp_colors[9];
+uint16_t temp_index[9];
+uint16_t true_colors[6] = {0x31be, 0xdA03, 0x2d63, 0xdc63, 0xfdee, 0x0000};
+uint16_t true1_colors[6] = {BLUE, RED, GREEN, ORANGE, WHITE, YELLOW};
 
 Reg_Info Sensor_Config[] =
 	{
@@ -167,34 +169,34 @@ void ImagDisp(int start_x, int start_y, int end_x, int end_y)
 			READ_FIFO_PIXEL(Camera_Data);
 			LCD_Write_Data(Camera_Data);
 			// bottom row
-			if( j == 110 && i == 60)
+			if (j == 110 && i == 60)
 				squareColors[0] = Camera_Data;
-			
-			if( j == 110 && i == 120)
+
+			if (j == 110 && i == 120)
 				squareColors[1] = Camera_Data;
-			
-			if( j == 110 && i == 170)
+
+			if (j == 110 && i == 170)
 				squareColors[2] = Camera_Data;
-			
+
 			// // middle row
 			if (j == 160 && i == 60)
 				squareColors[3] = Camera_Data;
 
 			if (j == 160 && i == 120)
 				squareColors[4] = Camera_Data;
-			
+
 			if (j == 160 && i == 170)
 				squareColors[5] = Camera_Data;
-			
+
 			// top row
 
-			if (j==210 && i==60)
+			if (j == 210 && i == 60)
 				squareColors[6] = Camera_Data;
-			
-			if (j==210 && i==120)
+
+			if (j == 210 && i == 120)
 				squareColors[7] = Camera_Data;
-			
-			if (j==210 && i==170)
+
+			if (j == 210 && i == 170)
 				squareColors[8] = Camera_Data;
 		}
 	}
@@ -203,23 +205,21 @@ void ImagDisp(int start_x, int start_y, int end_x, int end_y)
 	//	LCD_DrawLine(75,35,75,190, 0x0000);
 	//	LCD_DrawLine(230,35,230,190, 0x0000);
 	// j , i
-	uint16_t temp_colors[9];
 	KNearest_match(temp_colors);
-	LCD_DrawEllipse(110, 60, 5, 5, temp_colors[0]); // 0 bottom left
-	LCD_DrawEllipse(110,120,5,5, temp_colors[1]); //1 bottom mid
-	LCD_DrawEllipse(110,170,5,5, temp_colors[2]); //2 bottom right
+	LCD_DrawEllipse(110, 60, 5, 5, temp_colors[0]);	 // 0 bottom left
+	LCD_DrawEllipse(110, 120, 5, 5, temp_colors[1]); // 1 bottom mid
+	LCD_DrawEllipse(110, 170, 5, 5, temp_colors[2]); // 2 bottom right
 
-	LCD_DrawEllipse(160,60,5,5, temp_colors[3]); // 3 mid left
-	LCD_DrawEllipse(160,120,5,5, temp_colors[4]);// 4 center
-	LCD_DrawEllipse(160,170,5,5, temp_colors[5]);// 5 mid right
+	LCD_DrawEllipse(160, 60, 5, 5, temp_colors[3]);	 // 3 mid left
+	LCD_DrawEllipse(160, 120, 5, 5, temp_colors[4]); // 4 center
+	LCD_DrawEllipse(160, 170, 5, 5, temp_colors[5]); // 5 mid right
 
-	LCD_DrawEllipse(210,60,5,5, temp_colors[6]); // 6 top left
-	LCD_DrawEllipse(210,120,5,5, temp_colors[7]); //7 top mid
-	LCD_DrawEllipse(210,170,5,5, temp_colors[8]); //8 top right
+	LCD_DrawEllipse(210, 60, 5, 5, temp_colors[6]);	 // 6 top left
+	LCD_DrawEllipse(210, 120, 5, 5, temp_colors[7]); // 7 top mid
+	LCD_DrawEllipse(210, 170, 5, 5, temp_colors[8]); // 8 top right
 
 	HAL_Delay(1000);
 }
-
 
 // Do a KNN match on the colors
 // KNN match
@@ -247,7 +247,7 @@ void KNearest_match(uint16_t temp_colors[9])
 			}
 		}
 		temp_colors[i] = true1_colors[min_index];
-		
+		temp_index[i] = min_index;
 	}
 	return;
 }

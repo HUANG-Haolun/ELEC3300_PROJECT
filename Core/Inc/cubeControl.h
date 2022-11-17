@@ -9,56 +9,154 @@
  *
  */
 
-
-
 #pragma once
 #include "motorDriver.h"
-volatile int faceMotor = 0;
-volatile unsigned char cube[6][9] = {0};
-void test()
-{
-    unsigned char test[54] = {'L', 'L', 'U', 'B', 'U', 'L', 'D', 'R', 'U',
-                              'R', 'F', 'R', 'R', 'R', 'F', 'L', 'U', 'F',
-                              'R', 'D', 'F', 'R', 'F', 'B', 'L', 'U', 'F',
-                              'F', 'R', 'U', 'L', 'D', 'L', 'D', 'B', 'D',
-                              'B', 'U', 'B', 'R', 'L', 'F', 'L', 'B', 'R',
-                              'B', 'D', 'U', 'U', 'B', 'F', 'L', 'D', 'B'};
-    memcpy(cube, test, 54);
-}
 
-#define Z                             \
+extern void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle, uint8_t wait_flag);
+
+extern void rotateInSpdMode(uint8_t ID, uint8_t dir, uint16_t speed);
+
+volatile int rotate_flag = 0;
+volatile unsigned char cube[6][9] = {0};
+#define K                             \
     do                                \
     {                                 \
-        rotateInPosMode(3, 1, 90, 1); \
-        rotateInPosMode(1, 0, 90, 0); \
-        faceMotor++;                  \
-        faceMotor %= 4;               \
+        HAL_Delay(500);               \
+        rotateInPosMode(3, 0, 90, 1); \
+        rotateInPosMode(1, 1, 90, 0); \
+        ++rotate_flag;                \
     } while (0)
-#define K(FLAG)                        \
+
+#define C                              \
     do                                 \
     {                                  \
-        while (faceMotor != FLAG)      \
-            Z;                         \
         rotateInPosMode(2, 1, 119, 1); \
+        HAL_Delay(50);                 \
         rotateInPosMode(2, 0, 29, 1);  \
     } while (0)
 
-#define K1(FLAG)                       \
+#define C1                             \
     do                                 \
     {                                  \
-        while (faceMotor != FLAG)      \
-            Z;                         \
         rotateInPosMode(2, 0, 117, 1); \
+        HAL_Delay(50);                 \
         rotateInPosMode(2, 1, 27, 1);  \
     } while (0)
 
-#define K2(FLAG)                       \
+#define C2                             \
     do                                 \
     {                                  \
-        while (faceMotor != FLAG)      \
-            Z;                         \
         rotateInPosMode(2, 0, 207, 1); \
+        HAL_Delay(50);                 \
         rotateInPosMode(2, 1, 27, 1);  \
+    } while (0)
+
+#define B                            \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 0) \
+            K;                       \
+        HAL_Delay(500);              \
+        C;                           \
+    } while (0)
+
+#define B1                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 0) \
+            K;                       \
+        HAL_Delay(500);              \
+        C1;                          \
+    } while (0)
+
+#define B2                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 0) \
+            K;                       \
+        HAL_Delay(500);              \
+        C2;                          \
+    } while (0)
+
+#define U                            \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 1) \
+            K;                       \
+        HAL_Delay(500);              \
+        C;                           \
+    } while (0)
+
+#define U1                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 1) \
+            K;                       \
+        HAL_Delay(500);              \
+        C1;                          \
+    } while (0)
+
+#define U2                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 1) \
+            K;                       \
+        HAL_Delay(500);              \
+        C2;                          \
+    } while (0)
+
+#define F                            \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 2) \
+            K;                       \
+        HAL_Delay(500);              \
+        C;                           \
+    } while (0)
+
+#define F1                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 2) \
+            K;                       \
+        HAL_Delay(500);              \
+        C1;                          \
+    } while (0)
+
+#define F2                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 2) \
+            K;                       \
+        HAL_Delay(500);              \
+        C2;                          \
+    } while (0)
+
+#define D                            \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 3) \
+            K;                       \
+        HAL_Delay(500);              \
+        C;                           \
+    } while (0)
+
+#define D1                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 3) \
+            K;                       \
+        HAL_Delay(500);              \
+        C1;                          \
+    } while (0)
+
+#define D2                           \
+    do                               \
+    {                                \
+        while (rotate_flag % 4 != 3) \
+            K;                       \
+        HAL_Delay(500);              \
+        C2;                          \
     } while (0)
 
 #define R rotateInPosMode(1, 0, 270, 1)
@@ -68,4 +166,3 @@ void test()
 #define L rotateInPosMode(3, 1, 90, 1)
 #define L1 rotateInPosMode(3, 1, 180, 1)
 #define L2 rotateInPosMode(3, 1, 270, 1)
-

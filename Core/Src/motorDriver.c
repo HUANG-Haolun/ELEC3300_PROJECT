@@ -30,7 +30,7 @@ void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle, uint8_t wait_flag)
     TxBuffer[6] = (uint8_t)(steps >> 8);
     TxBuffer[7] = (uint8_t)(steps & 0x00FF);
     TxBuffer[8] = CHECK_BIT;
-    HAL_Delay(10);
+    HAL_Delay(50);
     while (!(motor_flag & (0x01 << (ID - 1))))
         ;
     while (wait_flag && motor_flag != 7)
