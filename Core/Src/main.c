@@ -16,9 +16,9 @@
  ******************************************************************************
  */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 #include "fsmc.h"
@@ -61,6 +61,7 @@ volatile uint16_t red = 100;
 volatile uint16_t green = 50;
 volatile uint16_t blue = 0;
 volatile uint8_t fy;
+volatile uint8_t Ov7725_vsync;
 /* USER CODE END 0 */
 
 /**
@@ -91,31 +92,37 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM3_Init();
   MX_FSMC_Init();
-  MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  // HAL_SD_CARD_READY();
 
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  motor_flag = 7;
+  /* USER CODE END 2 */
 
-  HAL_UART_Receive_IT(&huart2, (uint8_t *)&RxBuffer, 3);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  motor_flag = 7;
+  HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, 3);
+  LCD_INIT();
+
+  LCD_Clear(50, 80, 140, 70, RED);
+  LCD_DrawString(75, 100, "CAMERA TESTER");
+  HAL_Delay(2000);
+
+  // while (Ov7725_Init() != SUCCESS)
+  //   ;
+  // Ov7725_vsync = 0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    L;
     red = (rand() % 10 + red) % 310;
     green = (rand() % 10 + green) % 310;
     blue = (rand() % 10 + blue) % 310;
-    htim3.Instance->CCR2 = 100 + ((red > 155) ? 310 - red : red);
-    htim3.Instance->CCR3 = 100 + ((green > 155) ? 310 - green : green);
-    htim3.Instance->CCR4 = 100 + ((blue > 155) ? 310 - blue : blue);
+    // htim3.Instance->CCR2 = 100 + ((red > 155) ? 310 - red : red);
+    // htim3.Instance->CCR3 = 100 + ((green > 155) ? 310 - green : green);
+    // htim3.Instance->CCR4 = 100 + ((blue > 155) ? 310 - blue : blue);
     HAL_Delay(500);
   }
   /* USER CODE END 3 */
@@ -130,8 +137,7 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
+  /** Initializes the CPU, AHB and APB busses clocks
    */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -144,8 +150,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
-  /** Initializes the CPU, AHB and APB buses clocks
+  /** Initializes the CPU, AHB and APB busses clocks
    */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -195,3 +200,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

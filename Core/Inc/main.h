@@ -28,6 +28,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -57,27 +58,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define K2_Pin_Pin GPIO_PIN_13
-#define K2_Pin_GPIO_Port GPIOC
-#define K2_Pin_EXTI_IRQn EXTI15_10_IRQn
-#define LED_G_Pin GPIO_PIN_0
-#define LED_G_GPIO_Port GPIOB
-#define LED_B_Pin GPIO_PIN_1
-#define LED_B_GPIO_Port GPIOB
-#define LCD_BL_Pin GPIO_PIN_12
-#define LCD_BL_GPIO_Port GPIOD
-#define SIO_C_Pin GPIO_PIN_6
-#define SIO_C_GPIO_Port GPIOC
-#define SIO_D_Pin GPIO_PIN_7
-#define SIO_D_GPIO_Port GPIOC
-#define LED_R_Pin GPIO_PIN_5
-#define LED_R_GPIO_Port GPIOB
-#define CH_PD_Pin GPIO_PIN_8
-#define CH_PD_GPIO_Port GPIOB
-#define RESET_WIFI_Pin GPIO_PIN_9
-#define RESET_WIFI_GPIO_Port GPIOB
-#define LCD_RESET_Pin GPIO_PIN_1
-#define LCD_RESET_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */
 
@@ -86,3 +66,5 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
