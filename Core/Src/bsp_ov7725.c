@@ -14,7 +14,7 @@ uint16_t squareColors[9];
 uint16_t temp_colors[9];
 uint16_t temp_index[9];
 uint16_t true_colors[6] = {0x31be, 0xdA03, 0x2d63, 0xdc63, 0xfdee, 0x0000};
-uint16_t true1_colors[6] = {BLUE, RED, GREEN, ORANGE, WHITE, YELLOW};
+uint16_t true1_colors[6] = {BLUE, RED, GREEN, ORANGE, WHITE, BLACK};
 
 Reg_Info Sensor_Config[] =
 	{

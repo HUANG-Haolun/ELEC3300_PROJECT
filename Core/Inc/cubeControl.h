@@ -21,7 +21,7 @@ volatile unsigned char cube[6][9] = {0};
 #define K                             \
     do                                \
     {                                 \
-        HAL_Delay(500);               \
+        HAL_Delay(800);               \
         rotateInPosMode(3, 0, 90, 1); \
         rotateInPosMode(1, 1, 90, 0); \
         ++rotate_flag;                \

@@ -204,8 +204,8 @@ void SysTick_Handler(void)
   * @brief This function handles EXTI line3 interrupt.
   */
 void EXTI3_IRQHandler(void)
- {
-   /* USER CODE BEGIN EXTI3_IRQn 0 */
+{
+  /* USER CODE BEGIN EXTI3_IRQn 0 */
    if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_3) != RESET)
    {
  		if( Ov7725_vsync == 0 )
@@ -227,13 +227,18 @@ void EXTI3_IRQHandler(void)
      __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
      HAL_GPIO_EXTI_Callback(GPIO_PIN_3);
    }
- }
+  /* USER CODE END EXTI3_IRQn 0 */
+  /* USER CODE BEGIN EXTI3_IRQn 1 */
+
+  /* USER CODE END EXTI3_IRQn 1 */
+}
+
 /**
   * @brief This function handles USART1 global interrupt.
   */
 void USART1_IRQHandler(void)
 {
-  /* USER CODE BEGIN USART2_IRQn 0 */
+  /* USER CODE BEGIN USART1_IRQn 0 */
   if (RxBuffer[2] == 0x6b)
   {
     if (RxBuffer[1] == 0x9f)
@@ -245,12 +250,12 @@ void USART1_IRQHandler(void)
       motor_flag &= ~(0x01 << (RxBuffer[0] - 1));
     }
   }
+  /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
-  /* USER CODE END USART2_IRQn 0 */
-
-  /* USER CODE BEGIN USART2_IRQn 1 */
+  /* USER CODE BEGIN USART1_IRQn 1 */
   HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, RXBUFFERSIZE);
 
+  /* USER CODE END USART1_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
@@ -261,20 +266,19 @@ void USART1_IRQHandler(void)
 //   {
 // 		if( Ov7725_vsync == 0 )
 //     {
-// 				FIFO_WRST_L(); 	                      
-//         FIFO_WE_H();	                      
-            
-//         Ov7725_vsync = 1;	   	
-//         FIFO_WE_H();                         
-//         FIFO_WRST_H();                     
+// 				FIFO_WRST_L();
+//         FIFO_WE_H();
+
+//         Ov7725_vsync = 1;
+//         FIFO_WE_H();
+//         FIFO_WRST_H();
 //     }
 //     else if( Ov7725_vsync == 1 )
 //     {
-//         FIFO_WE_L();                       
+//         FIFO_WE_L();
 //         Ov7725_vsync = 2;
-//     }        
-				
-		
+//     }
+
 //     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
 //     HAL_GPIO_EXTI_Callback(GPIO_PIN_3);
 //   }
