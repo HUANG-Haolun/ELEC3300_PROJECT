@@ -12,9 +12,7 @@
 #include "usart.h"
 #include <string.h>
 volatile uint8_t motor_flag;
-volatile uint8_t k;
-volatile uint8_t b;
-volatile uint8_t c;
+
 uint8_t RxBuffer[RXBUFFERSIZE];
 void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle, uint8_t wait_flag)
 {

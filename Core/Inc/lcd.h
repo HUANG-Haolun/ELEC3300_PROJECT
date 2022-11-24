@@ -39,12 +39,12 @@
 #define      BLACK                         0x0000	 
 #define      GREY                          0xF7DE	  
 #define      BLUE                          0x001f
-#define      GREEN                         0x07a0	    
+#define      GREEN                         0x07e0	    
 #define      RED                           0xF800
 #define      MAGENTA                       0xF81F	 
 #define      CYAN                          0x7FFF	   
 #define      YELLOW                        0xff4e
-#define 	 ORANGE 					   0xfac0
+#define 	 ORANGE 					   0xfba0
 #define      BACKGROUND		           WHITE  
 
 

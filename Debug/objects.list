@@ -1,5 +1,6 @@
 "./Core/Src/bsp_ov7725.o"
 "./Core/Src/bsp_sccb.o"
+"./Core/Src/color_detection.o"
 "./Core/Src/fsmc.o"
 "./Core/Src/gpio.o"
 "./Core/Src/lcd.o"

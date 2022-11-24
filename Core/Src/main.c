@@ -108,16 +108,80 @@ int main(void)
   motor_flag = 7;
   HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, 3);
   LCD_INIT();
-
+  cube_t cube;
+  // char line_buffer[54]  = "BBBFULRUBUURFRRRDFDFLUFDLRUUUFFDRLDLRRFLLBBLFDLUBBDDBD";
+  // memcpy(cube.face, line_buffer, 54);
   LCD_Clear(50, 80, 140, 70, RED);
   LCD_DrawString(75, 100, "CAMERA TESTER");
+  // solve_Naive(&cube);
   HAL_Delay(2000);
-
+  // for (uint16_t i = 0; i < cube.routeLen; i++)
+  // {
+  //   switch (cube.route[i])
+  //   {
+  //   case 0:
+  //     l();
+  //     break;
+  //   case 1:
+  //     l1();
+  //     break;
+  //   case 2:
+  //     l2();
+  //     break;
+  //   case 3:
+  //     r();
+  //     break;
+  //   case 4:
+  //     r1();
+  //     break;
+  //   case 5:
+  //     r2();
+  //     break;
+  //   case 6:
+  //     u();
+  //     break;
+  //   case 7:
+  //     u1();
+  //     break;
+  //   case 8:
+  //     u2();
+  //     break;
+  //   case 9:
+  //     d();
+  //     break;
+  //   case 10:
+  //     d1();
+  //     break;
+  //   case 11:
+  //     d2();
+  //     break;
+  //   case 12:
+  //     f();
+  //     break;
+  //   case 13:
+  //     f1();
+  //     break;
+  //   case 14:
+  //     f2();
+  //     break;
+  //   case 15:
+  //     b();
+  //     break;
+  //   case 16:
+  //     b1();
+  //     break;
+  //   case 17:
+  //     b2();
+  //     break;
+  //   default:
+  //     break;
+  //   }
+  // }
+  
   while (Ov7725_Init() != SUCCESS)
     ;
   Ov7725_vsync = 0;
   uint8_t cnt = 0;
-  cube_t cube;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -189,70 +253,8 @@ int main(void)
 
         HAL_Delay(1000);
         Ov7725_vsync = 0;
-        cnt++;
+        // cnt++;
       }
-    }
-  }
-  solve_Naive(&cube);
-  for(uint16_t i = 0; i < cube.routeLen; i++){
-    switch (cube.route[i])
-    {
-    case 0:
-      l();
-      break;
-    case 1:
-      l1();
-      break;
-    case 2:
-      l2();
-      break;
-    case 3:
-      r();
-      break;
-    case 4:
-      r1();
-      break;
-    case 5:
-      r2();
-      break;
-    case 6:
-      u();
-      break;
-    case 7:
-      u1();
-      break;
-    case 8:
-      u2();
-      break;
-    case 9: 
-      d();
-      break;
-    case 10:
-      d1();
-      break;
-    case 11:
-      d2();
-      break;
-    case 12:  
-      f();
-      break;
-    case 13:
-      f1();
-      break;
-    case 14:
-      f2();
-      break;
-    case 15:
-      b();
-      break;
-    case 16:
-      b1();
-      break;
-    case 17:
-      b2();
-      break;
-    default:
-      break;
     }
   }
   /* USER CODE END 3 */
