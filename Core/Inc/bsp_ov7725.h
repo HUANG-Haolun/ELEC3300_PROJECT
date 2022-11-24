@@ -190,8 +190,7 @@
 #define OV7725_ID       0x21
 
 ErrorStatus Ov7725_Init(void);
-void ImagDisp(int start_x, int start_y, int end_x, int end_y);
-void KNearest_match(uint16_t temp_colors[9]);
+void ImagDisp();
 #endif
 
 

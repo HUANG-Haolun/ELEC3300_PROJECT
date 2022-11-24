@@ -25,11 +25,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "cubeControl.h"
+#include "color_detection.h"
 #include "lcd.h"
+#include "solve.h"
 #include "string.h"
 #include "bsp_ov7725.h"
 #include "bsp_sccb.h"
+#include "cubeControl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,6 +98,7 @@ int main(void)
   MX_GPIO_Init();
   MX_FSMC_Init();
   MX_USART1_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -114,57 +117,142 @@ int main(void)
     ;
   Ov7725_vsync = 0;
   uint8_t cnt = 0;
+  cube_t cube;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    //     F;
-
-    //    HAL_Delay(500);
-
-    if (Ov7725_vsync == 2)
+    while (cnt < 13)
     {
-      FIFO_PREPARE;
-      ImagDisp(50, 100, 150, 250);
-      Ov7725_vsync = 0;
+      if (Ov7725_vsync == 2)
+      {
+        FIFO_PREPARE;
+        //	LCD_Rst();
+        uint16_t temp_colors[9];
+        uint16_t squareColors[9];
+        //	uint16_t x, y;
+        uint16_t Camera_Data;
+        memset(squareColors, 0, sizeof(squareColors));
+        LCD_Cam_Gram();
+        for (int i = 0; i < 240; i++)
+        {
+          for (int j = 0; j < 320; j++)
+          {
+            READ_FIFO_PIXEL(Camera_Data);
+            LCD_Write_Data(Camera_Data);
+            // bottom row
+            if (j == 110 && i == 60)
+              squareColors[0] = Camera_Data;
+
+            if (j == 110 && i == 120)
+              squareColors[1] = Camera_Data;
+
+            if (j == 110 && i == 170)
+              squareColors[2] = Camera_Data;
+
+            // // middle row
+            if (j == 160 && i == 60)
+              squareColors[3] = Camera_Data;
+
+            if (j == 160 && i == 120)
+              squareColors[4] = Camera_Data;
+
+            if (j == 160 && i == 170)
+              squareColors[5] = Camera_Data;
+
+            // top row
+
+            if (j == 210 && i == 60)
+              squareColors[6] = Camera_Data;
+
+            if (j == 210 && i == 120)
+              squareColors[7] = Camera_Data;
+
+            if (j == 210 && i == 170)
+              squareColors[8] = Camera_Data;
+          }
+        }
+        // j , i
+        KNearest_match(squareColors, temp_colors, cnt, cube.face);
+        LCD_DrawEllipse(110, 60, 5, 5, temp_colors[0]);  // 0 bottom left
+        LCD_DrawEllipse(110, 120, 5, 5, temp_colors[1]); // 1 bottom mid
+        LCD_DrawEllipse(110, 170, 5, 5, temp_colors[2]); // 2 bottom right
+
+        LCD_DrawEllipse(160, 60, 5, 5, temp_colors[3]);  // 3 mid left
+        LCD_DrawEllipse(160, 120, 5, 5, temp_colors[4]); // 4 center
+        LCD_DrawEllipse(160, 170, 5, 5, temp_colors[5]); // 5 mid right
+
+        LCD_DrawEllipse(210, 60, 5, 5, temp_colors[6]);  // 6 top left
+        LCD_DrawEllipse(210, 120, 5, 5, temp_colors[7]); // 7 top mid
+        LCD_DrawEllipse(210, 170, 5, 5, temp_colors[8]); // 8 top right
+
+        HAL_Delay(1000);
+        Ov7725_vsync = 0;
+        cnt++;
+      }
     }
-    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+  }
+  solve_Naive(&cube);
+  for(uint16_t i = 0; i < cube.routeLen; i++){
+    switch (cube.route[i])
     {
-      if (cnt++ < 4)
-      {
-        K;
-      }
-      else
-      {
-        C;
-        K;
-        K;
-        K;
-        // K;
-        // C1;
-        // R;
-        // C;
-        // K;
-        // K;
-        // K;
-        // K;
-        // C1;
-        // R;
-        // C;
-        // K;
-        // K;
-        // K;
-        // K;
-        // C1;
-        // R;
-        // C;
-        // K;
-        // K;
-        // K;
-        // K;
-        // C1;
-      }
+    case 0:
+      l();
+      break;
+    case 1:
+      l1();
+      break;
+    case 2:
+      l2();
+      break;
+    case 3:
+      r();
+      break;
+    case 4:
+      r1();
+      break;
+    case 5:
+      r2();
+      break;
+    case 6:
+      u();
+      break;
+    case 7:
+      u1();
+      break;
+    case 8:
+      u2();
+      break;
+    case 9: 
+      d();
+      break;
+    case 10:
+      d1();
+      break;
+    case 11:
+      d2();
+      break;
+    case 12:  
+      f();
+      break;
+    case 13:
+      f1();
+      break;
+    case 14:
+      f2();
+      break;
+    case 15:
+      b();
+      break;
+    case 16:
+      b1();
+      break;
+    case 17:
+      b2();
+      break;
+    default:
+      break;
     }
   }
   /* USER CODE END 3 */

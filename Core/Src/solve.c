@@ -1,13 +1,42 @@
 #include "solve.h"
 #include <string.h>
 
+static uint8_t route_mask[18] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+static uint8_t route_trans[18] = {12, 13, 14, 15, 16, 17, 6, 7, 8, 9, 10, 11, 3, 4, 5, 0, 1, 2};
+
+static uint8_t face_index1[5][2] = {
+    {7, 1},
+    {3, 5},
+    {3, 5},
+    {1, 7},
+    {5, 3}};
+static uint8_t rotate_index1[5][2] = {
+    {F3, B},
+    {L3, R},
+    {L2, R2},
+    {B3, F},
+    {R3, L}};
+static uint8_t face_index2[5][2] = {
+    {5, 5},
+    {7, 7},
+    {7, 1},
+    {3, 3},
+    {1, 1}};
+static route_t rotate_index2[5][2] = {
+    {R, R},
+    {F, F},
+    {F2, B2},
+    {L, L},
+    {B, B}};
+
+
 void rotateCube(cube_t *c, uint8_t move)
 {
     char temp[54];
     memcpy(temp, c->face, 54);
     for (int i = 0; i < 54; i++)
         c->face[i] = temp[transMat[move][i]];
-    c->route[c->routeLen++] = move;
+    c->route[c->routeLen++] = route_mask[move];
     if(move == T)
     {
         uint8_t route_temp[18];

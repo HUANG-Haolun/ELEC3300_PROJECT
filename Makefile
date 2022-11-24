@@ -63,6 +63,7 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c \
 Core/Src/system_stm32f1xx.c \
 Core/src/motorDriver.c \
 Core/src/solve.c \
+Core/src/color_detection.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c \
 Core/Src/gpio.c \
 Core/Src/fsmc.c \

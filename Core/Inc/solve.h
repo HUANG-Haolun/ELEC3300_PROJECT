@@ -36,7 +36,7 @@ typedef struct cube_struct
     uint8_t routeLen;
 } cube_t;
 
-const uint8_t transMat[19][54] = {
+static const uint8_t transMat[19][54] = {
     // L  0
     {53, 1, 2, 50, 4, 5, 47, 7, 8,
      9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -194,30 +194,6 @@ typedef enum route_enum
     T
 } route_t;
 
-uint8_t route_mask[18] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-uint8_t route_trans[18] = {12, 13, 14, 15, 16, 17, 6, 7, 8, 9, 10, 11, 3, 4, 5, 0, 1, 2};
 
-uint8_t face_index1[5][2] = {
-    {7, 1},
-    {3, 5},
-    {3, 5},
-    {1, 7},
-    {5, 3}};
-uint8_t rotate_index1[5][2] = {
-    {F3, B},
-    {L3, R},
-    {L2, R2},
-    {B3, F},
-    {R3, L}};
-uint8_t face_index2[5][2] = {
-    {5, 5},
-    {7, 7},
-    {7, 1},
-    {3, 3},
-    {1, 1}};
-route_t rotate_index2[5][2] = {
-    {R, R},
-    {F, F},
-    {F2, B2},
-    {L, L},
-    {B, B}};
+
+void solve_Naive(cube_t *c);
