@@ -52,7 +52,7 @@ void MX_USART3_UART_Init(void)
 {
 
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
+  huart3.Init.BaudRate = 9600;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -125,6 +125,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
     __HAL_AFIO_REMAP_USART3_PARTIAL();
 
+    /* USART3 interrupt Init */
+    HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspInit 1 */
 
   /* USER CODE END USART3_MspInit 1 */
@@ -168,6 +171,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10|GPIO_PIN_11);
 
+    /* USART3 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspDeInit 1 */
 
   /* USER CODE END USART3_MspDeInit 1 */
@@ -176,6 +181,31 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  UNUSED(huart);
+  HAL_UART_Transmit(&huart3, (uint8_t *)&rx_buffer, 1,0xFFFF);
+  while(HAL_UART_GetState(&huart3) == HAL_UART_STATE_BUSY_TX);
+  HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_buffer, 1);
+  //c means confrim face, s means start robot,b means begin solve ,e means end solve
+  switch(rx_buffer)
+  {
+    case 'c':
+      bt_flags = 1;
+      break;
+    case 's':
+      bt_flags = 2;
+      break;
+    case 'b':
+      bt_flags = 3;
+      break;
+    case 'e':
+      bt_flags = 4;
+      break;
+    default:
+      break;
+  }
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

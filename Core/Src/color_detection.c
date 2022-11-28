@@ -12,8 +12,8 @@
 
 uint16_t temp_index[9];
 // uint16_t detection_colors[6] = {0x31be, 0xdA03, 0x2d63, 0xdc63, 0xfdee, 0x0000};
-uint16_t detection_colors[6] = {BLUE, RED, GREEN, ORANGE, WHITE, BLACK};
-uint16_t true_colors[6] = {BLUE, RED, GREEN, ORANGE, WHITE, BLACK};
+uint16_t detection_colors[6] = {GREEN, RED, ORANGE, YELLOW, WHITE, BLUE};
+uint16_t true_colors[6] = {GREEN, RED, ORANGE, YELLOW, WHITE, BLUE};
 char face_colors[6] = {'F', 'L', 'R', 'U', 'D', 'B'};
 uint8_t face_order[6] = {2, 0, 5, 3, 1, 4};
 uint8_t detection_order[62] = {18, 19, 20, 21, 22, 23, 24, 25, 26,
@@ -61,19 +61,19 @@ int rgb_to_hsv(float r, float g, float b, float *h, float *s, float *v)
 }
 
 // KNN match
-void KNearest_match(uint16_t square_colors[9], uint16_t real_colors[9], uint8_t times, char *face)
+void KNearest_match(uint16_t square_colors[9], uint16_t real_colors[9], uint8_t times, char *face, uint8_t bt_flags)
 {
-	int8_t midColor[3];
-	midColor[0] = midterm_order[0] & 0x1F;
-	midColor[1] = (midterm_order[0] >> 5) & 0x3F;
-	midColor[2] = (midterm_order[0] >> 11) & 0x1F;
-	int8_t midCube[3];
-	midCube[0] = square_colors[4] & 0x1F;
-	midCube[1] = (square_colors[4] >> 5) & 0x3F;
-	midCube[2] = (square_colors[4] >> 11) & 0x1F;
-	int8_t diffR = midCube[0] - midColor[0];
-	int8_t diffG = midCube[1] - midColor[1];
-	int8_t diffB = midCube[2] - midColor[2];
+	// int8_t midColor[3];
+	// midColor[0] = midterm_order[0] & 0x1F;
+	// midColor[1] = (midterm_order[0] >> 5) & 0x3F;
+	// midColor[2] = (midterm_order[0] >> 11) & 0x1F;
+	// int8_t midCube[3];
+	// midCube[0] = square_colors[4] & 0x1F;
+	// midCube[1] = (square_colors[4] >> 5) & 0x3F;
+	// midCube[2] = (square_colors[4] >> 11) & 0x1F;
+	// int8_t diffR = midCube[0] - midColor[0];
+	// int8_t diffG = midCube[1] - midColor[1];
+	// int8_t diffB = midCube[2] - midColor[2];
 	for (int i = 0; i < 9; i++)
 	{
 		int8_t temp[3];
@@ -104,6 +104,7 @@ void KNearest_match(uint16_t square_colors[9], uint16_t real_colors[9], uint8_t 
 		// else
 		// 	min_index = 0;
 		real_colors[i] = true_colors[min_index];
-		face[detection_order[times * 9 + i]] = face_colors[min_index];
+		if (bt_flags == 1)
+			face[detection_order[times * 9 + i]] = face_colors[min_index];
 	}
 }
