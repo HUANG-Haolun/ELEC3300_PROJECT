@@ -60,6 +60,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define START_BT_Pin GPIO_PIN_0
 #define START_BT_GPIO_Port GPIOA
+#define START_BT_EXTI_IRQn EXTI0_IRQn
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */
 

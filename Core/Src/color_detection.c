@@ -16,12 +16,18 @@ uint16_t detection_colors[6] = {GREEN, RED, ORANGE, YELLOW, WHITE, BLUE};
 uint16_t true_colors[6] = {GREEN, RED, ORANGE, YELLOW, WHITE, BLUE};
 char face_colors[6] = {'F', 'L', 'R', 'U', 'D', 'B'};
 uint8_t face_order[6] = {2, 0, 5, 3, 1, 4};
-uint8_t detection_order[62] = {18, 19, 20, 21, 22, 23, 24, 25, 26,
+uint8_t detection_order[] = {18, 19, 20, 21, 22, 23, 24, 25, 26,
 							   27, 28, 29, 30, 31, 32, 33, 34, 35,
 							   53, 52, 51, 50, 49, 48, 47, 46, 45,
 							   0, 1, 2, 3, 4, 5, 6, 7, 8,
-							   11, 14, 17, 9, 10, 11, 15, 12, 9, 15, 16, 17,
-							   42, 39, 36, 36, 37, 38, 38, 41, 44, 42, 43, 44};
+							   11, 14, 17, 0, 0, 0, 0, 0, 0,
+							   9, 10, 11, 0, 0, 0, 0, 0, 0,
+							   15, 12, 9, 0, 0, 0, 0, 0, 0,
+							   17, 16, 15, 0, 0, 0, 0, 0, 0,
+							   42, 39, 36, 0, 0, 0, 0, 0, 0,
+							   36, 37, 38, 0, 0, 0, 0, 0, 0,
+							   38, 41, 44, 0, 0, 0, 0, 0, 0,
+							   44, 43, 42, 0, 0, 0, 0, 0, 0};
 uint16_t midterm_order[12] = {BLUE, RED, GREEN, ORANGE, WHITE, BLACK, BLUE, RED, GREEN, ORANGE, WHITE, BLACK};
 
 float max(float a, float b, float c)
@@ -99,12 +105,12 @@ void KNearest_match(uint16_t square_colors[9], uint16_t real_colors[9], uint8_t 
 				min_index = i;
 			}
 		}
-		// if (h < 50 || h > 310)
-		// 	min_index = 1;
-		// else
-		// 	min_index = 0;
 		real_colors[i] = true_colors[min_index];
 		if (bt_flags == 1)
+		{
+			if (times > 3 && i > 2)
+				break;
 			face[detection_order[times * 9 + i]] = face_colors[min_index];
+		}
 	}
 }

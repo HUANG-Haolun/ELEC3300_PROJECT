@@ -71,9 +71,9 @@ extern volatile uint8_t bt_flags;
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -109,6 +109,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   motor_flag = 7;
   HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, 3);
+  HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_buffer, 1);
   LCD_INIT();
   cube_t cube;
   memset(cube.face, 0, 54);
@@ -156,104 +157,101 @@ int main(void)
               squareColors[0] = Camera_Data;
 
             if (j == 110 && i == 120)
-              squareColors[1] = Camera_Data;
+              squareColors[3] = Camera_Data;
 
             if (j == 110 && i == 170)
-              squareColors[2] = Camera_Data;
+              squareColors[6] = Camera_Data;
 
             // // middle row
             if (j == 160 && i == 60)
-              squareColors[3] = Camera_Data;
+              squareColors[1] = Camera_Data;
 
             if (j == 160 && i == 120)
               squareColors[4] = Camera_Data;
 
             if (j == 160 && i == 170)
-              squareColors[5] = Camera_Data;
+              squareColors[7] = Camera_Data;
 
             // top row
 
             if (j == 210 && i == 60)
-              squareColors[6] = Camera_Data;
+              squareColors[2] = Camera_Data;
 
             if (j == 210 && i == 120)
-              squareColors[7] = Camera_Data;
+              squareColors[5] = Camera_Data;
 
             if (j == 210 && i == 170)
               squareColors[8] = Camera_Data;
           }
         }
         // j , i
-        if (bt_flags == 1)
-          cnt++;
         KNearest_match(squareColors, temp_colors, cnt, cube.face, bt_flags);
 
-        LCD_DrawEllipse(110, 60, 5, 5, temp_colors[0]);  // 0 bottom left
-        LCD_DrawEllipse(110, 120, 5, 5, temp_colors[1]); // 1 bottom mid
-        LCD_DrawEllipse(110, 170, 5, 5, temp_colors[2]); // 2 bottom right
+        LCD_DrawEllipse(110, 60, 10, 10, temp_colors[0]);  // 0 bottom left
+        LCD_DrawEllipse(110, 120, 10, 10, temp_colors[3]); // 1 bottom mid
+        LCD_DrawEllipse(110, 170, 10, 10, temp_colors[6]); // 2 bottom right
 
-        LCD_DrawEllipse(160, 60, 5, 5, temp_colors[3]);  // 3 mid left
-        LCD_DrawEllipse(160, 120, 5, 5, temp_colors[4]); // 4 center
-        LCD_DrawEllipse(160, 170, 5, 5, temp_colors[5]); // 5 mid right
+        LCD_DrawEllipse(160, 60, 10, 10, temp_colors[1]);  // 3 mid left
+        LCD_DrawEllipse(160, 120, 10, 10, temp_colors[4]); // 4 center
+        LCD_DrawEllipse(160, 170, 10, 10, temp_colors[7]); // 5 mid right
 
-        LCD_DrawEllipse(210, 60, 5, 5, temp_colors[6]);  // 6 top left
-        LCD_DrawEllipse(210, 120, 5, 5, temp_colors[7]); // 7 top mid
-        LCD_DrawEllipse(210, 170, 5, 5, temp_colors[8]); // 8 top right
+        LCD_DrawEllipse(210, 60, 10, 10, temp_colors[2]);  // 6 top left
+        LCD_DrawEllipse(210, 120, 10, 10, temp_colors[5]); // 7 top mid
+        LCD_DrawEllipse(210, 170, 10, 10, temp_colors[8]); // 8 top right
         if (bt_flags == 1)
         {
-          bt_flags = 0;
+          bt_flags = 5;
+          cnt++;
           HAL_UART_Transmit(&huart3, (uint8_t *)cube.face, 54, 100);
         }
 
-        if (cnt < 4)
+        switch (cnt)
         {
+        case 1:
+        case 2:
+        case 3:
           K;
-        }
-        else
-        {
-          switch (cnt)
-          {
-          case 4:
-            C;
-            K;
-            K;
-            K;
-            break;
-          case 5:
-          case 6:
-          case 7:
-            K;
-            C1;
-            K;
-            C;
-            K;
-            K;
-            K;
-            break;
-          case 8:
-            K;
-            C2;
-            K;
-            K;
-            K;
-          case 9:
-          case 10:
-            K;
-            C;
-            K;
-            C1;
-            K;
-            K;
-            K;
-            break;
-          case 11:
-            K;
-            C;
-            K;
-            K;
-            K;
-            break;
-          }
+          break;
+        case 4:
+          K;
+          C;
+          K;
+          K;
+          K;
+          break;
+        case 5:
+        case 6:
+        case 7:
+          K;
+          C1;
+          K;
+          C;
+          K;
+          K;
+          K;
+          break;
+        case 8:
+          K;
+          C2;
+          K;
+          K;
+          K;
+        case 9:
+        case 10:
+          K;
+          C;
+          K;
+          C1;
+          K;
+          K;
+          K;
+          break;
+        case 11:
+          K;
+          C;
+          K;
+          K;
+          break;
         }
 
         HAL_Delay(1000);
@@ -267,72 +265,72 @@ int main(void)
         LCD_DrawString(75, 100, "DETECTION DONE, WAITING FOR COMMAND");
         cnt++;
       }
-        if (bt_flags == 3)
+      if (bt_flags == 3)
+      {
+        solve_Naive(&cube);
+        for (uint16_t i = 0; i < cube.routeLen; i++)
         {
-          solve_Naive(&cube);
-          for (uint16_t i = 0; i < cube.routeLen; i++)
+          switch (cube.route[i])
           {
-            switch (cube.route[i])
-            {
-            case 0:
-              l();
-              break;
-            case 1:
-              l1();
-              break;
-            case 2:
-              l2();
-              break;
-            case 3:
-              r();
-              break;
-            case 4:
-              r1();
-              break;
-            case 5:
-              r2();
-              break;
-            case 6:
-              u();
-              break;
-            case 7:
-              u1();
-              break;
-            case 8:
-              u2();
-              break;
-            case 9:
-              d();
-              break;
-            case 10:
-              d1();
-              break;
-            case 11:
-              d2();
-              break;
-            case 12:
-              f();
-              break;
-            case 13:
-              f1();
-              break;
-            case 14:
-              f2();
-              break;
-            case 15:
-              b();
-              break;
-            case 16:
-              b1();
-              break;
-            case 17:
-              b2();
-              break;
-            default:
-              break;
-            }
+          case 0:
+            l();
+            break;
+          case 1:
+            l1();
+            break;
+          case 2:
+            l2();
+            break;
+          case 3:
+            r();
+            break;
+          case 4:
+            r1();
+            break;
+          case 5:
+            r2();
+            break;
+          case 6:
+            u();
+            break;
+          case 7:
+            u1();
+            break;
+          case 8:
+            u2();
+            break;
+          case 9:
+            d();
+            break;
+          case 10:
+            d1();
+            break;
+          case 11:
+            d2();
+            break;
+          case 12:
+            f();
+            break;
+          case 13:
+            f1();
+            break;
+          case 14:
+            f2();
+            break;
+          case 15:
+            b();
+            break;
+          case 16:
+            b1();
+            break;
+          case 17:
+            b2();
+            break;
+          default:
+            break;
           }
         }
+      }
     }
   }
 
@@ -341,16 +339,16 @@ int main(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Initializes the CPU, AHB and APB busses clocks
-  */
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
@@ -363,9 +361,8 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   /** Initializes the CPU, AHB and APB busses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -382,9 +379,9 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -397,14 +394,14 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
