@@ -23,6 +23,9 @@
 #define LCD_Default_Max_COLUMN 240
 #define LCD_Default_Max_PAGE 320
 
+#define LCD_Default_Max_Width 240
+#define LCD_Default_Max_Heigth 320
+
 #define LCD_DispWindow_Start_COLUMN 0
 #define LCD_DispWindow_Start_PAGE 0
 
@@ -42,7 +45,7 @@
 #define RED 0xF800
 #define MAGENTA 0xF81F
 #define CYAN 0x7FFF
-#define YELLOW 0xff4e
+#define YELLOW 0xffe0
 #define ORANGE 0xfba0
 #define BACKGROUND WHITE
 
@@ -67,4 +70,8 @@ void LCD_DrawDot(uint16_t usC, uint16_t usP, uint16_t usColor);
 void LCD_DrawEllipse(uint16_t usC, uint16_t usP, uint16_t SR, uint16_t LR, uint16_t usColor);
 void LCD_Cam_Gram(void);
 void drawCube(char *face);
+void LCD_GramScan(uint8_t ucOption);
+void LCD_DrawCross(uint16_t usX, uint16_t usY);
+void LCD_DrawChar_Color ( uint16_t usC, uint16_t usP, const char cChar, uint16_t usColor_Background, uint16_t usColor_Foreground );
+void LCD_DrawString_Color ( uint16_t usC, uint16_t usP, const char * pStr, uint16_t usColor_Background, uint16_t usColor_Foreground );
 #endif

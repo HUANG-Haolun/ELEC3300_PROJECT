@@ -11,8 +11,8 @@
 #pragma once
 #include "stm32f1xx_hal.h"
 #include "usart.h"
-#define SPEED 16
-#define ACCELERATION 0
+#define SPEED 60
+#define ACCELERATION 248
 #define STEP_DGREE 1.8
 #define M_STEP 16
 #define CHECK_BIT 0x6b
@@ -26,6 +26,8 @@ extern uint8_t RxBuffer[RXBUFFERSIZE];
 extern volatile uint8_t motor_flag;
 
 void rotateInPosMode(uint8_t ID, uint8_t dir, uint16_t angle, uint8_t wait_flag);
+
+void rotate2InPosMode(uint8_t ID1, uint8_t ID2, uint8_t dir1, uint8_t dir2, uint16_t angle, uint8_t wait_flag);
 
 void rotateInSpdMode(uint8_t ID, uint8_t dir, uint16_t speed);
 

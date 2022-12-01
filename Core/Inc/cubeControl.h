@@ -20,34 +20,46 @@ volatile int rotate_flag = 0;
 volatile unsigned char cube[6][9] = {0};
 void K()
 {
-    HAL_Delay(800);
-    rotateInPosMode(3, 0, 90, 1);
-    rotateInPosMode(1, 1, 90, 0);
+    // HAL_Delay(800);
+    // rotateInPosMode(3, 0, 90, 1);
+    // rotateInPosMode(1, 1, 90, 0);
     ++rotate_flag;
+    rotate2InPosMode(1, 3, 1, 0, 90, 1);
+    // HAL_Delay(500);
+}
+
+void K3()
+{
+    // HAL_Delay(800);
+    // rotateInPosMode(3, 0, 90, 1);
+    // rotateInPosMode(1, 1, 90, 0);
+    rotate_flag += 3;
+    rotate2InPosMode(1, 3, 1, 0, 270, 1);
+//     HAL_Delay(300);
 }
 
 void C()
 
 {
-    rotateInPosMode(2, 1, 119, 1);
-    HAL_Delay(50);
-    rotateInPosMode(2, 0, 29, 1);
+    rotateInPosMode(2, 1, 114, 1);
+    // HAL_Delay(50);
+    rotateInPosMode(2, 0, 24, 1);
 }
 
 void C1()
 
 {
-    rotateInPosMode(2, 0, 117, 1);
-    HAL_Delay(50);
-    rotateInPosMode(2, 1, 27, 1);
+    rotateInPosMode(2, 0, 121, 1);
+    // HAL_Delay(50);
+    rotateInPosMode(2, 1, 31, 1);
 }
 
 void C2()
 
 {
-    rotateInPosMode(2, 0, 207, 1);
-    HAL_Delay(50);
-    rotateInPosMode(2, 1, 27, 1);
+    rotateInPosMode(2, 0, 211, 1);
+    // HAL_Delay(50);
+    rotateInPosMode(2, 1, 31, 1);
 }
 
 void b()
@@ -147,9 +159,9 @@ void d2()
 }
 
 void r() { rotateInPosMode(1, 0, 270, 1); }
-void r1() { rotateInPosMode(1, 0, 180, 1); }
-void r2() { rotateInPosMode(1, 0, 90, 1); }
+void r2() { rotateInPosMode(1, 0, 180, 1); }
+void r1() { rotateInPosMode(1, 0, 90, 1); }
 
 void l() { rotateInPosMode(3, 1, 90, 1); }
-void l1() { rotateInPosMode(3, 1, 180, 1); }
-void l2() { rotateInPosMode(3, 1, 270, 1); }
+void l2() { rotateInPosMode(3, 1, 180, 1); }
+void l1() { rotateInPosMode(3, 1, 270, 1); }
