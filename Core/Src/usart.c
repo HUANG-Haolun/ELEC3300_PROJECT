@@ -1,26 +1,29 @@
 /**
-  ******************************************************************************
-  * File Name          : USART.c
-  * Description        : This file provides code for the configuration
-  *                      of the USART instances.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * File Name          : USART.c
+ * Description        : This file provides code for the configuration
+ *                      of the USART instances.
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ ******************************************************************************
+ */
 
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "motorDriver.h"
+#include "bsp_ov7725.h"
+#include "xpt2046.h"
 volatile uint8_t bt_flags = 0;
 extern volatile uint8_t rx_buffer;
 /* USER CODE END 0 */
@@ -45,7 +48,6 @@ void MX_USART1_UART_Init(void)
   {
     Error_Handler();
   }
-
 }
 /* USART3 init function */
 
@@ -64,18 +66,17 @@ void MX_USART3_UART_Init(void)
   {
     Error_Handler();
   }
-
 }
 
-void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
+void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if(uartHandle->Instance==USART1)
+  if (uartHandle->Instance == USART1)
   {
-  /* USER CODE BEGIN USART1_MspInit 0 */
+    /* USER CODE BEGIN USART1_MspInit 0 */
 
-  /* USER CODE END USART1_MspInit 0 */
+    /* USER CODE END USART1_MspInit 0 */
     /* USART1 clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
 
@@ -97,15 +98,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /* USART1 interrupt Init */
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
-  /* USER CODE BEGIN USART1_MspInit 1 */
+    /* USER CODE BEGIN USART1_MspInit 1 */
 
-  /* USER CODE END USART1_MspInit 1 */
+    /* USER CODE END USART1_MspInit 1 */
   }
-  else if(uartHandle->Instance==USART3)
+  else if (uartHandle->Instance == USART3)
   {
-  /* USER CODE BEGIN USART3_MspInit 0 */
+    /* USER CODE BEGIN USART3_MspInit 0 */
 
-  /* USER CODE END USART3_MspInit 0 */
+    /* USER CODE END USART3_MspInit 0 */
     /* USART3 clock enable */
     __HAL_RCC_USART3_CLK_ENABLE();
 
@@ -129,20 +130,20 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /* USART3 interrupt Init */
     HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(USART3_IRQn);
-  /* USER CODE BEGIN USART3_MspInit 1 */
+    /* USER CODE BEGIN USART3_MspInit 1 */
 
-  /* USER CODE END USART3_MspInit 1 */
+    /* USER CODE END USART3_MspInit 1 */
   }
 }
 
-void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
+void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 {
 
-  if(uartHandle->Instance==USART1)
+  if (uartHandle->Instance == USART1)
   {
-  /* USER CODE BEGIN USART1_MspDeInit 0 */
+    /* USER CODE BEGIN USART1_MspDeInit 0 */
 
-  /* USER CODE END USART1_MspDeInit 0 */
+    /* USER CODE END USART1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USART1_CLK_DISABLE();
 
@@ -150,19 +151,19 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PA9     ------> USART1_TX
     PA10     ------> USART1_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9 | GPIO_PIN_10);
 
     /* USART1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USART1_IRQn);
-  /* USER CODE BEGIN USART1_MspDeInit 1 */
+    /* USER CODE BEGIN USART1_MspDeInit 1 */
 
-  /* USER CODE END USART1_MspDeInit 1 */
+    /* USER CODE END USART1_MspDeInit 1 */
   }
-  else if(uartHandle->Instance==USART3)
+  else if (uartHandle->Instance == USART3)
   {
-  /* USER CODE BEGIN USART3_MspDeInit 0 */
+    /* USER CODE BEGIN USART3_MspDeInit 0 */
 
-  /* USER CODE END USART3_MspDeInit 0 */
+    /* USER CODE END USART3_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USART3_CLK_DISABLE();
 
@@ -170,27 +171,57 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PC10     ------> USART3_TX
     PC11     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10|GPIO_PIN_11);
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10 | GPIO_PIN_11);
 
     /* USART3 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USART3_IRQn);
-  /* USER CODE BEGIN USART3_MspDeInit 1 */
+    /* USER CODE BEGIN USART3_MspDeInit 1 */
 
-  /* USER CODE END USART3_MspDeInit 1 */
+    /* USER CODE END USART3_MspDeInit 1 */
   }
 }
 
 /* USER CODE BEGIN 1 */
+extern volatile uint8_t bt_flags;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  UNUSED(huart);
-  HAL_UART_Transmit(&huart3, (uint8_t *)&rx_buffer, 1,0xFFFF);
-  while(HAL_UART_GetState(&huart3) == HAL_UART_STATE_BUSY_TX);
-  HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_buffer, 1);
-  //c means confrim face, s means start robot,b means begin solve ,e means end solve
-  switch(rx_buffer)
+  // UNUSED(huart);
+  if (huart == &huart1)
   {
+    if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE))
+    {
+      HAL_UART_AbortReceive(&huart1);
+    }
+    else
+    {
+      if (RxBuffer[1] == 0x9f)
+      {
+        motor_flag |= 0x01 << (RxBuffer[0] - 1);
+      }
+      else if (RxBuffer[1] == 0x02)
+      {
+        motor_flag &= ~(0x01 << (RxBuffer[0] - 1));
+      }
+    }
+    memset(RxBuffer, 0, 3);
+
+    while (HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, RXBUFFERSIZE) != HAL_OK)
+    {
+      __HAL_UNLOCK(&huart1);
+      HAL_UART_AbortReceive(&huart1);
+    }
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+  }
+  else if (huart == &huart3)
+  {
+    // HAL_UART_Transmit(&huart3, (uint8_t *)&rx_buffer, 1, 0xFFFF);
+    while (HAL_UART_GetState(&huart3) == HAL_UART_STATE_BUSY_TX)
+      ;
+    HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_buffer, 1);
+    // c means confrim face, s means start robot,b means begin solve ,e means end solve
+    switch (rx_buffer)
+    {
     case 'c':
       bt_flags = 1;
       break;
@@ -205,6 +236,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
       break;
     default:
       break;
+    }
   }
 }
 /* USER CODE END 1 */

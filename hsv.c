@@ -1,46 +1,43 @@
 #include <stdio.h>
 #include <math.h>
-float max(float a, float b, float c)
+#include <stdint.h>
+void rgb2hsv(uint16_t rgb, float *h, float *s, float *v)
 {
-    return ((a > b) ? (a > c ? a : c) : (b > c ? b : c));
-}
-float min(float a, float b, float c)
-{
-    return ((a < b) ? (a < c ? a : c) : (b < c ? b : c));
-}
-int rgb_to_hsv(float r, float g, float b)
-{
-    // R, G, B values are divided by 255
-    // to change the range from 0..255 to 0..1:
-    float h, s, v;
-    r /= 255.0;
-    g /= 255.0;
-    b /= 255.0;
-    float cmax = max(r, g, b); // maximum of r, g, b
-    float cmin = min(r, g, b); // minimum of r, g, b
-    float diff = cmax - cmin;  // diff of cmax and cmin.
-    if (cmax == cmin)
-        h = 0;
-    else if (cmax == r)
-        h = fmod((60 * ((g - b) / diff) + 360), 360.0);
-    else if (cmax == g)
-        h = fmod((60 * ((b - r) / diff) + 120), 360.0);
-    else if (cmax == b)
-        h = fmod((60 * ((r - g) / diff) + 240), 360.0);
-    // if cmax equal zero
-    if (cmax == 0)
-        s = 0;
+    uint16_t r = (rgb >> 11) & 0x1f;
+    uint16_t g = (rgb >> 5) & 0x3f;
+    uint16_t b = rgb & 0x1f;
+    float max = r > g ? r : g;
+    max = max > b ? max : b;
+    float min = r < g ? r : g;
+    min = min < b ? min : b;
+    *v = max;
+    if (max == 0)
+    {
+        *s = 0;
+        *h = 0;
+        return;
+    }
+    *s = 255 * (max - min) / max;
+    if (r == max)
+    {
+        *h = 0 + 43 * (g - b) / (max - min);
+    }
+    else if (g == max)
+    {
+        *h = 85 + 43 * (b - r) / (max - min);
+    }
     else
-        s = (diff / cmax) * 100;
-    // compute v
-    v = cmax * 100;
-    printf("h s v=(%f, %f, %f)\n", h, s, v);
-    return 0;
+    {
+        *h = 171 + 43 * (r - g) / (max - min);
+    }
 }
 // main function
 int main(int argc, char const *argv[])
 {
-    int r = 0, g = 255, b = 0;
-    rgb_to_hsv(r, g, b);
+    float h = 0;
+    float s = 0;
+    float v = 0;
+    rgb2hsv(0x7e0, &h, &s, &v);
+    printf("h = %f, s = %f, v = %f", h, s, v);
     return 0;
 }

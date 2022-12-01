@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "motorDriver.h"
 #include "bsp_ov7725.h"
+#include "xpt2046.h"
 extern uint8_t Ov7725_vsync;
 /* USER CODE END Includes */
 
@@ -57,6 +58,7 @@ extern uint8_t Ov7725_vsync;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_tim1_ch4_trig_com;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
@@ -210,10 +212,7 @@ void EXTI0_IRQHandler(void)
 
   if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0) != RESET)
   {
-    if (bt_flags == 0)
-      bt_flags = 2;
-    else
-      bt_flags = 1;
+    bt_flags = 2;
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
     HAL_GPIO_EXTI_Callback(GPIO_PIN_0);
   }
@@ -258,26 +257,64 @@ void EXTI3_IRQHandler(void)
 }
 
 /**
+ * @brief This function handles EXTI line4 interrupt.
+ */
+void EXTI4_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_IRQn 0 */
+  if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_4) != RESET)
+  {
+    ucXPT2046_TouchFlag = 1;
+
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_4);
+    HAL_GPIO_EXTI_Callback(GPIO_PIN_4);
+  }
+  /* USER CODE END EXTI4_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+  /* USER CODE BEGIN EXTI4_IRQn 1 */
+
+  /* USER CODE END EXTI4_IRQn 1 */
+}
+
+/**
+ * @brief This function handles DMA1 channel4 global interrupt.
+ */
+void DMA1_Channel4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_tim1_ch4_trig_com);
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
  * @brief This function handles USART1 global interrupt.
  */
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-  if (RxBuffer[2] == 0x6b)
-  {
-    if (RxBuffer[1] == 0x9f)
-    {
-      motor_flag |= 0x01 << (RxBuffer[0] - 1);
-    }
-    else if (RxBuffer[1] == 0x02)
-    {
-      motor_flag &= ~(0x01 << (RxBuffer[0] - 1));
-    }
-  }
+  extern void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart);
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-  HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, RXBUFFERSIZE);
+  if (__HAL_UART_GET_FLAG(&huart1, UART_IT_IDLE) && huart1.RxXferCount != 0U)
+  {
+    HAL_UART_RxCpltCallback(&huart1);
+    /* Disable the IRDA Data Register not empty Interrupt */
+    __HAL_UART_DISABLE_IT(&huart1, UART_IT_RXNE);
+
+    /* Disable the UART Parity Error Interrupt */
+    __HAL_UART_DISABLE_IT(&huart1, UART_IT_PE);
+    /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+    __HAL_UART_DISABLE_IT(&huart1, UART_IT_ERR);
+
+    /* Rx process is completed, restore huart->RxState to Ready */
+    huart1.RxState = HAL_UART_STATE_READY;
+  }
+  __HAL_UART_CLEAR_IDLEFLAG(&huart1);
 
   /* USER CODE END USART1_IRQn 1 */
 }
@@ -297,6 +334,11 @@ void USART3_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+// void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+// {
+
+// }
 // void EXTI3_IRQHandler(void)
 // {
 //   /* USER CODE BEGIN EXTI3_IRQn 0 */

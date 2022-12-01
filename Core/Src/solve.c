@@ -29,21 +29,21 @@ static route_t rotate_index2[5][2] = {
     {L, L},
     {B, B}};
 
-
 void rotateCube(cube_t *c, uint8_t move)
 {
     char temp[54];
     memcpy(temp, c->face, 54);
     for (int i = 0; i < 54; i++)
         c->face[i] = temp[transMat[move][i]];
-    c->route[c->routeLen++] = route_mask[move];
-    if(move == T)
+    if (move == T)
     {
         uint8_t route_temp[18];
         memcpy(route_temp, route_mask, 18);
         for (int i = 0; i < 18; i++)
             route_mask[i] = route_temp[route_trans[i]];
     }
+    else
+        c->route[c->routeLen++] = route_mask[move];
 }
 void formular11(cube_t *c)
 {
@@ -424,10 +424,12 @@ void formular62(cube_t *c)
 void solve_Naive(cube_t *c)
 {
     // 1. get the botton face cross
-    while (c->face[1] != 'D' || c->face[3] != 'D' || c->face[5] != 'D' || c->face[7] != 'D')
-        formular11(c);
-    formular12(c);
-    // 2. get the botton corner
+    if (!(c->face[28] == 'D' && c->face[30] == 'D' && c->face[32] == 'D' && c->face[34] == 'D' && c->face[25] == c->face[22] && c->face[16] == c->face[13] && c->face[52] == c->face[49] && c->face[40] == c->face[43]))
+    {
+        while (c->face[1] != 'D' || c->face[3] != 'D' || c->face[5] != 'D' || c->face[7] != 'D')
+            formular11(c);
+        formular12(c);
+    } // 2. get the botton corner
     while (c->face[26] != c->face[22] || c->face[17] != c->face[13] || c->face[53] != c->face[49] || c->face[40] != c->face[44] ||
            c->face[24] != c->face[22] || c->face[15] != c->face[13] || c->face[51] != c->face[49] || c->face[40] != c->face[42])
     {
