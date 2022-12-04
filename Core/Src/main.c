@@ -40,7 +40,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define RESET_SIZE 80
-#define FRAME_SIZE (RESET_SIZE + 24 * 15)
+#define FRAME_SIZE (RESET_SIZE + 24 * 45)
+#define LED_NUM 30
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -66,8 +67,8 @@ struct color_t
   uint8_t g;
   uint8_t b;
 };
-const uint8_t HIGH_0 = 28;
-const uint8_t HIGH_1 = 48;
+const uint8_t HIGH_0 = 22;
+const uint8_t HIGH_1 = 45;
 void stripToDMABuffer(struct color_t *ledStrip, uint32_t *DMADataBuf, uint32_t numLed)
 {
   for (uint32_t j = 0; j < numLed; j++)
@@ -99,9 +100,9 @@ void stripToDMABuffer(struct color_t *ledStrip, uint32_t *DMADataBuf, uint32_t n
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile uint16_t red = 100;
-volatile uint16_t green = 50;
-volatile uint16_t blue = 0;
+// volatile uint16_t red = 100;
+// volatile uint16_t green = 50;
+// volatile uint16_t blue = 0;
 volatile uint8_t fy;
 volatile uint8_t Ov7725_vsync;
 volatile uint8_t rx_buffer;
@@ -109,6 +110,8 @@ extern volatile uint8_t bt_flags;
 int melody[] = {50, 50, 50, 50, 200, 200, 200};
 uint32_t DMADataBuf[FRAME_SIZE] = {};
 static struct color_t orange = {127, 32, 0};
+static struct color_t blue = {0, 96, 67};
+static struct color_t LEDStrip[LED_NUM + 10] = {};
 /* USER CODE END 0 */
 
 /**
@@ -154,8 +157,10 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart1, (uint8_t *)&RxBuffer, 3);
   HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_buffer, 1);
-  // HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4, DMADataBuf, FRAME_SIZE);
-  // stripToDMABuffer(&orange , DMADataBuf, 15);
+  HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4, DMADataBuf, FRAME_SIZE);
+  for (size_t i = 0; i < LED_NUM + 10; i++)
+    LEDStrip[i] = orange;
+  stripToDMABuffer(LEDStrip, DMADataBuf, 30);
 
   LCD_INIT();
   cube_t cube;
@@ -166,8 +171,6 @@ int main(void)
   cube.face[31] = 'D';
   cube.face[40] = 'L';
   cube.face[49] = 'B';
-  // char line_buffer[54]  = "BBBFULRUBUURFRRRDFDFLUFDLRUUUFFDRLDLRRFLLBBLFDLUBBDDBD";
-  // memcpy(cube.face, line_buffer, 54);
   LCD_Clear(50, 80, 140, 70, RED);
   LCD_DrawString(75, 100, "PROGRAM START");
   drawCube(cube.face);
@@ -182,14 +185,11 @@ int main(void)
   Ov7725_vsync = 0;
   uint8_t cnt = 0;
   uint8_t startCam = 0;
-//  C();
-//  K3();
-//
-//  C();
   while (1 && bt_flags != 4)
   {
     /* USER CODE END WHILE */
-    /* USER CODE BEGIN 3 */
+
+    // /* USER CODE BEGIN 3 */
     ucXPT2046_TouchFlag = 0;
     if (bt_flags == 2)
       startCam = 1;
@@ -274,6 +274,7 @@ int main(void)
 
         if (confirm_flag == 1)
         {
+
           bt_flags = 5;
           drawCube(cube.face);
           cnt++;
@@ -336,7 +337,7 @@ int main(void)
       {
         if (bt_flags == 3)
         {
-          // char line_buffer[] = "ULUUUURBULRLRRRRRRUUBFFFFFFDDDDDDDDDRFBLLLLLLFUFBBBBBB";
+          // char line_buffer[] = "BBBFULRUBUURFRRRDFDFLUFDLRUUUFFDRLDLRRFLLBBLFDLUBBDDBD";
           // memcpy(cube.face, line_buffer, 54);
           LCD_Clear(0, 0, 320, 320, RED);
           LCD_DrawString(80, 100, "SOLVE BEGIN!");
@@ -347,8 +348,17 @@ int main(void)
           HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
           solve_Naive(&cube);
           LCD_DrawString(80, 150, "finish calculation!");
+          uint8_t color_cnt = 0;
           for (uint16_t i = 0; i < cube.routeLen; i++)
           {
+            float temp = cube.routeLen / 15.0f;
+            if (i % (int)temp == 0)
+            {
+              LEDStrip[color_cnt] = blue;
+                stripToDMABuffer(LEDStrip, DMADataBuf, 30);
+              color_cnt++;
+            }
+
             switch (cube.route[i])
             {
             case 0:
@@ -415,8 +425,8 @@ int main(void)
         }
       }
     }
-    /* USER CODE END 3 */
   }
+  /* USER CODE END 3 */
 }
 
 /**
